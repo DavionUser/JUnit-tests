@@ -1,24 +1,23 @@
 package javadev.service;
 
-import static javadev.service.Products.*;
+import javadev.model.Product;
 
 public class Discount {
-    ProductsPrice productsPrice = new ProductsPrice();
-    private int discountQuantityForA = 3;
-    private int discountQuantityForC = 6;
-    private double discountPriceForA = 3.00d;
-    private double discountPriceForC = 5.00d;
-    public double getDiscountForA(int productQuantity) {
-        if (productQuantity == discountQuantityForA) {
-            return discountPriceForA;
-        }
-        return productQuantity * productsPrice.getPrice(productA);
-    }
+    double priceAfterDiscount;
 
-    public double getDiscountForC(int productQuantity) {
-        if (productQuantity == discountQuantityForC) {
-            return discountPriceForC;
+    public double priceWithDiscount(int quantity, Product product) {
+
+        if (product.getDiscountQuantity() != 0) {
+            int outOfDiscount = quantity % product.getDiscountQuantity();
+            if (outOfDiscount == 0) {
+                priceAfterDiscount = quantity / product.getDiscountQuantity() * product.getDiscountPrice();
+            } else {
+                priceAfterDiscount = (quantity - outOfDiscount) / product.getDiscountQuantity()
+                        * product.getDiscountPrice() + outOfDiscount * product.getPrice();
+            }
+        } else {
+            priceAfterDiscount = quantity * product.getPrice();
         }
-        return productQuantity * productsPrice.getPrice(productC);
+        return priceAfterDiscount;
     }
 }
